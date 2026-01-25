@@ -1,0 +1,57 @@
+# =============================================================================
+# R→N PATTERN CONDITION - Reward Followed by Nonreward
+# =============================================================================
+# Experiment 1: Digital Treasure Hunt
+#
+# Condition Description:
+#   - 20 trials total
+#   - 10 coin chests, 10 empty chests
+#   - DETERMINISTIC ALTERNATING sequence: Coin → Empty → Coin → Empty...
+#   - 3 clicks required for ALL chests (same as baseline)
+#
+# Pattern: ✓❌✓❌✓❌✓❌✓❌✓❌✓❌✓❌✓❌✓❌
+#
+# Theoretical Prediction (Capaldi, 1967):
+#   R→N sequences create WEAK persistence because:
+#   - Participants learn "After reward, nothing comes"
+#   - In extinction (all empty), they DON'T expect rewards after empty trials
+#   - No N→R memory to drive continued responding
+#
+#   CAPALDI PREDICTS: RN_PATTERN < BASELINE < NR_PATTERN
+#
+# Critical Control:
+#   - Same total rewards as all other conditions (50 coins)
+#   - Same effort as baseline (3 clicks)
+#   - Same alternating structure as NR_PATTERN (just reversed)
+#   - This controls for "predictability" effects
+#   - If RN shows WEAK persistence, it's specifically the N→R association
+#     that matters, not just having a pattern
+#
+# Methodological Note:
+#   Comparing NR vs RN is crucial because:
+#   - Both are 100% predictable
+#   - Both alternate between outcomes
+#   - ONLY difference is N→R vs R→N transition
+#   - This isolates Capaldi's specific mechanism
+# =============================================================================
+trial,outcome,clicks_required,outcome_label
+1,1,3,coin
+2,0,3,empty
+3,1,3,coin
+4,0,3,empty
+5,1,3,coin
+6,0,3,empty
+7,1,3,coin
+8,0,3,empty
+9,1,3,coin
+10,0,3,empty
+11,1,3,coin
+12,0,3,empty
+13,1,3,coin
+14,0,3,empty
+15,1,3,coin
+16,0,3,empty
+17,1,3,coin
+18,0,3,empty
+19,1,3,coin
+20,0,3,empty

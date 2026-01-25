@@ -1,0 +1,47 @@
+# =============================================================================
+# HIGH EFFORT CONDITION - Increased Effort for Rewards
+# =============================================================================
+# Experiment 1: Digital Treasure Hunt
+#
+# Condition Description:
+#   - 20 trials total
+#   - 10 coin chests, 10 empty chests
+#   - RANDOM order (same as baseline)
+#   - CRITICAL MANIPULATION:
+#     * Coin chests: 10 clicks required (HIGH EFFORT)
+#     * Empty chests: 3 clicks required (LOW EFFORT)
+#
+# Theoretical Prediction (Festinger, 1957):
+#   "I worked hard (10 clicks) for those coins, so they must be valuable"
+#   Cognitive dissonance between effort and outcome leads to increased
+#   perceived value, which should increase persistence in extinction.
+#
+#   FESTINGER PREDICTS: HIGH_EFFORT > BASELINE
+#
+# Key Design Feature:
+#   Participants don't know which chests have coins UNTIL they open them.
+#   So they learn: "When I get coins, I had worked really hard"
+#
+# Note: This is a TEMPLATE. Sequence should match BASELINE for each participant.
+# =============================================================================
+trial,outcome,clicks_required,outcome_label
+1,1,10,coin
+2,0,3,empty
+3,1,10,coin
+4,1,10,coin
+5,0,3,empty
+6,0,3,empty
+7,1,10,coin
+8,0,3,empty
+9,1,10,coin
+10,0,3,empty
+11,0,3,empty
+12,1,10,coin
+13,1,10,coin
+14,0,3,empty
+15,1,10,coin
+16,0,3,empty
+17,1,10,coin
+18,0,3,empty
+19,0,3,empty
+20,1,10,coin

@@ -1,0 +1,42 @@
+# =============================================================================
+# N→R PATTERN CONDITION - Alternating Sequence
+# =============================================================================
+# Experiment 3: Pattern Memory Challenge
+#
+# Description:
+#   Perfect N→R (Nonreward → Reward) alternating sequence
+#   Every BLANK is followed by ACE
+#   Every ACE is followed by BLANK
+#
+# Pattern: BLANK → ACE → BLANK → ACE → BLANK → ACE...
+#
+# Theoretical Prediction (Capaldi, 1967):
+#   Participants should learn the N→R association:
+#   "After BLANK (nothing), ACE (reward) comes"
+#
+#   This creates strong expectations that persist.
+#   When asked "What comes after BLANK?", they should say ACE (rating 5-7).
+#
+# Total: 10 BLANK, 10 ACE (matched with RANDOM condition)
+# =============================================================================
+position,card_type
+1,BLANK
+2,ACE
+3,BLANK
+4,ACE
+5,BLANK
+6,ACE
+7,BLANK
+8,ACE
+9,BLANK
+10,ACE
+11,BLANK
+12,ACE
+13,BLANK
+14,ACE
+15,BLANK
+16,ACE
+17,BLANK
+18,ACE
+19,BLANK
+20,ACE

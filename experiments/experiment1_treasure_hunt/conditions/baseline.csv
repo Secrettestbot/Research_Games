@@ -1,0 +1,39 @@
+# =============================================================================
+# BASELINE CONDITION - Random Sequence
+# =============================================================================
+# Experiment 1: Digital Treasure Hunt
+#
+# Condition Description:
+#   - 20 trials total
+#   - 10 coin chests, 10 empty chests
+#   - RANDOM order (shuffled)
+#   - 3 clicks required for ALL chests
+#
+# Theoretical Role:
+#   Control condition for both Festinger and Capaldi predictions.
+#   No systematic effort manipulation, no systematic pattern.
+#
+# Note: This is a TEMPLATE. The actual sequence should be randomized
+#       per participant in the experiment code.
+# =============================================================================
+trial,outcome,clicks_required,outcome_label
+1,1,3,coin
+2,0,3,empty
+3,1,3,coin
+4,1,3,coin
+5,0,3,empty
+6,0,3,empty
+7,1,3,coin
+8,0,3,empty
+9,1,3,coin
+10,0,3,empty
+11,0,3,empty
+12,1,3,coin
+13,1,3,coin
+14,0,3,empty
+15,1,3,coin
+16,0,3,empty
+17,1,3,coin
+18,0,3,empty
+19,0,3,empty
+20,1,3,coin

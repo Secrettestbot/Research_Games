@@ -1,0 +1,44 @@
+# =============================================================================
+# RANDOM CONDITION - Control Sequence
+# =============================================================================
+# Experiment 3: Pattern Memory Challenge
+#
+# Description:
+#   Randomized sequence with same card totals as N→R condition
+#   No systematic N→R or R→N association
+#
+# Pattern: Random (example shown below, actual sequence randomized per participant)
+#
+# Theoretical Prediction (Capaldi, 1967):
+#   Without systematic N→R learning, participants should NOT expect
+#   ACE after BLANK any more than BLANK after BLANK.
+#
+#   When asked "What comes after BLANK?", they should be uncertain
+#   (rating around 3-5, near midpoint).
+#
+# Total: 10 BLANK, 10 ACE (matched with N→R condition)
+#
+# NOTE: This is a TEMPLATE. The actual sequence should be randomized
+#       per participant in the experiment code.
+# =============================================================================
+position,card_type
+1,ACE
+2,BLANK
+3,BLANK
+4,ACE
+5,ACE
+6,BLANK
+7,ACE
+8,BLANK
+9,BLANK
+10,BLANK
+11,ACE
+12,ACE
+13,BLANK
+14,ACE
+15,BLANK
+16,ACE
+17,BLANK
+18,ACE
+19,BLANK
+20,ACE
