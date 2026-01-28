@@ -69,18 +69,49 @@ function runPatternMemory(participantId, condition) {
     // CUSTOM CARD FLIP PLUGIN
     // ========================================================================
 
+    // Use jsPsychHtmlButtonResponse as a simple replacement for the custom plugin
+    // This avoids the ParameterType issue entirely
+    function createCardFlipTrial(cardType, trialNumber, totalTrials, showFeedback = true) {
+        const cardIcon = cardType === 'ACE' ? '🂡' : '⬜';
+        const cardClass = cardType === 'ACE' ? 'card-ace' : 'card-blank';
+        const cardLabel = cardType === 'ACE' ? 'ACE' : 'BLANK';
+
+        return {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `
+                <div style="text-align: center; padding: 40px;">
+                    <div style="margin-bottom: 20px; color: #7f8c8d;">
+                        Card ${trialNumber} of ${totalTrials}
+                    </div>
+                    <div class="card-display">
+                        <div class="${cardClass}">
+                            ${cardIcon}
+                        </div>
+                    </div>
+                    ${showFeedback ? `<div style="font-size: 24px; font-weight: bold; margin-top: 20px;">${cardLabel}</div>` : ''}
+                </div>
+            `,
+            choices: ['Continue'],
+            data: {
+                card_type: cardType,
+                trial_number: trialNumber
+            }
+        };
+    }
+
+    // Keep old plugin structure for compatibility but don't use ParameterType
     class CardFlipPlugin {
         static info = {
             name: 'card-flip',
             parameters: {
-                card_type: { type: jsPsych.ParameterType.STRING, default: 'ACE' },
-                trial_number: { type: jsPsych.ParameterType.INT, default: 1 },
-                total_trials: { type: jsPsych.ParameterType.INT, default: 20 },
-                show_feedback: { type: jsPsych.ParameterType.BOOL, default: true }
+                card_type: { type: 'string', default: 'ACE' },
+                trial_number: { type: 'int', default: 1 },
+                total_trials: { type: 'int', default: 20 },
+                show_feedback: { type: 'bool', default: true }
             }
         }
 
-        trial(display_element, trial) {
+        trial(display_element, trial, jsPsych) {
             const startTime = performance.now();
             let flipped = false;
             let flipTime = null;
