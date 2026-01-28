@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Experiment 3</title>
+</head>
+<body>
+    <h1>Testing Experiment 3 Load</h1>
+    <div id="status"></div>
+    <button onclick="testLoad()">Test Load Experiment 3</button>
+
+    <script>
+        function testLoad() {
+            const status = document.getElementById('status');
+
+            // Set test session data
+            sessionStorage.setItem('participant_id', 'PM_TEST_12345');
+            sessionStorage.setItem('experiment_type', 'pattern_memory');
+            sessionStorage.setItem('condition', 'NR_PATTERN');
+
+            status.innerHTML = '<p>Session data set:</p>' +
+                '<ul>' +
+                '<li>participant_id: ' + sessionStorage.getItem('participant_id') + '</li>' +
+                '<li>experiment_type: ' + sessionStorage.getItem('experiment_type') + '</li>' +
+                '<li>condition: ' + sessionStorage.getItem('condition') + '</li>' +
+                '</ul>' +
+                '<p><a href="experiment3.html">Click here to go to Experiment 3</a></p>';
+        }
+    </script>
+</body>
+</html>
