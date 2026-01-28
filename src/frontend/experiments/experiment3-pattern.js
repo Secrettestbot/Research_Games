@@ -267,18 +267,14 @@ function runPatternMemory(participantId, condition) {
 
     // Extinction phase (all BLANK cards)
     for (let i = 0; i < CONFIG.n_extinction; i++) {
-        timeline.push({
-            type: 'card-flip',
-            card_type: 'BLANK',
-            trial_number: i + 1,
-            total_trials: CONFIG.n_extinction,
-            show_feedback: true,
-            on_finish: function(data) {
-                data.phase = 'extinction';
-                data.condition = condition;
-                extinctionTrials.push(data);
-            }
-        });
+        const trial = createCardFlipTrial('BLANK', i + 1, CONFIG.n_extinction, true);
+        trial.on_finish = function(data) {
+            data.phase = 'extinction';
+            data.condition = condition;
+            data.card_type = 'BLANK';
+            extinctionTrials.push(data);
+        };
+        timeline.push(trial);
     }
 
     // Manipulation check
