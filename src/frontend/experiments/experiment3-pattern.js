@@ -156,17 +156,13 @@ function runPatternMemory(participantId, condition) {
 
     const practiceSequence = ['ACE', 'BLANK', 'ACE', 'BLANK'];
     for (let i = 0; i < CONFIG.n_practice; i++) {
-        timeline.push({
-            type: 'card-flip',
-            card_type: practiceSequence[i],
-            trial_number: i + 1,
-            total_trials: CONFIG.n_practice,
-            show_feedback: true,
-            on_finish: function(data) {
-                data.phase = 'practice';
-                practiceTrials.push(data);
-            }
-        });
+        const trial = createCardFlipTrial(practiceSequence[i], i + 1, CONFIG.n_practice, true);
+        trial.on_finish = function(data) {
+            data.phase = 'practice';
+            data.card_type = practiceSequence[i];
+            practiceTrials.push(data);
+        };
+        timeline.push(trial);
     }
 
     // Transition to main game
@@ -185,18 +181,14 @@ function runPatternMemory(participantId, condition) {
     // Acquisition phase
     const sequence = getSequence(condition);
     for (let i = 0; i < CONFIG.n_acquisition; i++) {
-        timeline.push({
-            type: 'card-flip',
-            card_type: sequence[i],
-            trial_number: i + 1,
-            total_trials: CONFIG.n_acquisition,
-            show_feedback: true,
-            on_finish: function(data) {
-                data.phase = 'acquisition';
-                data.condition = condition;
-                acquisitionTrials.push(data);
-            }
-        });
+        const trial = createCardFlipTrial(sequence[i], i + 1, CONFIG.n_acquisition, true);
+        trial.on_finish = function(data) {
+            data.phase = 'acquisition';
+            data.condition = condition;
+            data.card_type = sequence[i];
+            acquisitionTrials.push(data);
+        };
+        timeline.push(trial);
     }
 
     // PRIMARY DV 1: Expectation Rating
