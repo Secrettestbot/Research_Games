@@ -19,22 +19,25 @@ function getSequence(condition) {
     const sequence = [];
 
     switch(condition) {
+        case 'NR_PATTERN':
         case 'BLANK_FIRST':
-            // Alternating: Blank, Ace, Blank, Ace...
+            // Alternating: Blank, Ace, Blank, Ace... (Non-Reward Pattern)
             for (let i = 0; i < CONFIG.n_acquisition; i++) {
                 sequence.push(i % 2 === 0 ? 'BLANK' : 'ACE');
             }
             break;
 
+        case 'RN_PATTERN':
         case 'ACE_FIRST':
-            // Alternating: Ace, Blank, Ace, Blank...
+            // Alternating: Ace, Blank, Ace, Blank... (Reward-Nonreward Pattern)
             for (let i = 0; i < CONFIG.n_acquisition; i++) {
                 sequence.push(i % 2 === 0 ? 'ACE' : 'BLANK');
             }
             break;
 
+        case 'RANDOM':
         default:
-            // Random 50/50 split as fallback
+            // Random 50/50 split
             const cards = Array(10).fill('ACE').concat(Array(10).fill('BLANK'));
             for (let i = cards.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));

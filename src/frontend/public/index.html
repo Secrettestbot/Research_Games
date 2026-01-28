@@ -33,6 +33,25 @@
 
                 <p>This study examines how people make decisions and recognize patterns. You will complete one interactive task.</p>
 
+                <div class="info-box" style="margin-top: 20px;">
+                    <h3>Choose Your Experiment</h3>
+                    <p>Select which experiment you would like to participate in:</p>
+                    <div style="margin: 15px 0;">
+                        <label style="display: block; margin: 10px 0; cursor: pointer;">
+                            <input type="radio" name="experiment-choice" value="treasure_hunt" checked>
+                            <strong>Experiment 1: Treasure Hunt</strong> - A clicking game to collect virtual coins (10-15 min)
+                        </label>
+                        <label style="display: block; margin: 10px 0; cursor: pointer;">
+                            <input type="radio" name="experiment-choice" value="career_choice">
+                            <strong>Experiment 2: Career Choice</strong> - A survey about workplace preferences (10-15 min)
+                        </label>
+                        <label style="display: block; margin: 10px 0; cursor: pointer;">
+                            <input type="radio" name="experiment-choice" value="pattern_memory">
+                            <strong>Experiment 3: Pattern Memory</strong> - A memory task with playing cards (10-15 min)
+                        </label>
+                    </div>
+                </div>
+
                 <button class="btn btn-primary" onclick="showConsent()">Continue</button>
             </section>
 
@@ -157,13 +176,12 @@
                 // Show loading
                 showSection('assignment-section');
 
-                // Random assignment to experiment
-                const experiments = ['treasure_hunt', 'career_choice', 'pattern_memory'];
-                const randomExperiment = experiments[Math.floor(Math.random() * experiments.length)];
+                // Get selected experiment
+                const selectedExperiment = document.querySelector('input[name="experiment-choice"]:checked').value;
 
                 // Record consent and get assignment
                 const response = await api.recordConsent({
-                    experiment_type: randomExperiment,
+                    experiment_type: selectedExperiment,
                     consent_given: true,
                     user_agent: navigator.userAgent
                     // ip_address omitted - server will capture from request
