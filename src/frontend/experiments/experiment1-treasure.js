@@ -66,11 +66,11 @@ function runTreasureHunt(participantId, condition) {
         static info = {
             name: 'chest-click',
             parameters: {
-                clicks_required: { type: jsPsych.ParameterType.INT, default: 3 },
-                outcome: { type: jsPsych.ParameterType.INT, default: 0 },
-                show_quit_button: { type: jsPsych.ParameterType.BOOL, default: false },
-                trial_number: { type: jsPsych.ParameterType.INT, default: 1 },
-                total_coins: { type: jsPsych.ParameterType.INT, default: 0 }
+                clicks_required: { type: 'int', default: 3 },
+                outcome: { type: 'int', default: 0 },
+                show_quit_button: { type: 'bool', default: false },
+                trial_number: { type: 'int', default: 1 },
+                total_coins: { type: 'int', default: 0 }
             }
         }
 
@@ -153,7 +153,7 @@ function runTreasureHunt(participantId, condition) {
         }
     }
 
-    jsPsych.plugins['chest-click'] = ChestClickPlugin;
+    // Plugin will be used directly via type reference, no need to register in v7
 
     // ========================================================================
     // TIMELINE
