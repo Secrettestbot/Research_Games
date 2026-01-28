@@ -165,8 +165,8 @@
                 const response = await api.recordConsent({
                     experiment_type: randomExperiment,
                     consent_given: true,
-                    user_agent: navigator.userAgent,
-                    ip_address: null  // Server will capture from request
+                    user_agent: navigator.userAgent
+                    // ip_address omitted - server will capture from request
                 });
 
                 // Store participant info
