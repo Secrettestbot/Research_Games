@@ -195,11 +195,11 @@
                 // Show redirect section
                 showSection('redirect-section');
 
-                // Determine redirect URL
+                // Determine redirect URL with cache-busting parameter
                 const experimentPages = {
-                    'treasure_hunt': 'experiment1.html',
-                    'career_choice': 'experiment2.html',
-                    'pattern_memory': 'experiment3.html'
+                    'treasure_hunt': 'experiment1.html?v=2',
+                    'career_choice': 'experiment2.html?v=2',
+                    'pattern_memory': 'experiment3.html?v=2'
                 };
 
                 const redirectUrl = experimentPages[response.experiment_type];
