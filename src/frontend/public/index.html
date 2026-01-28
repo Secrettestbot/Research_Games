@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Research Study - Decision Making and Pattern Recognition</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Research Study</h1>
+            <p class="subtitle">Decision Making and Pattern Recognition</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Welcome Section -->
+            <section id="welcome-section" class="section active">
+                <h2>Welcome!</h2>
+                <p>Thank you for your interest in participating in our research study.</p>
+
+                <div class="info-box">
+                    <h3>Study Information</h3>
+                    <ul>
+                        <li><strong>Duration:</strong> 10-15 minutes</li>
+                        <li><strong>Compensation:</strong> Course credit or $2</li>
+                        <li><strong>Requirements:</strong> Age 18+, normal or corrected vision</li>
+                        <li><strong>Device:</strong> Desktop or laptop computer (recommended)</li>
+                        <li><strong>Browser:</strong> Firefox, Chrome, Safari, or Edge</li>
+                    </ul>
+                </div>
+
+                <p>This study examines how people make decisions and recognize patterns. You will complete one interactive task.</p>
+
+                <button class="btn btn-primary" onclick="showConsent()">Continue</button>
+            </section>
+
+            <!-- Consent Section -->
+            <section id="consent-section" class="section">
+                <h2>Informed Consent</h2>
+
+                <div class="consent-form">
+                    <h3>Study Purpose</h3>
+                    <p>This research investigates decision-making processes and pattern recognition abilities in different contexts.</p>
+
+                    <h3>Procedures</h3>
+                    <p>You will be randomly assigned to complete one of three interactive tasks:</p>
+                    <ul>
+                        <li>A clicking game to collect virtual coins</li>
+                        <li>A survey about workplace preferences</li>
+                        <li>A memory task with playing cards</li>
+                    </ul>
+                    <p>The task will take approximately 10-15 minutes. You may stop at any time.</p>
+
+                    <h3>Risks and Benefits</h3>
+                    <p><strong>Risks:</strong> This study involves minimal risk, no more than everyday computer use. You may experience mild fatigue or boredom.</p>
+                    <p><strong>Benefits:</strong> You will contribute to scientific understanding of human decision-making. You may also learn about your own decision patterns.</p>
+
+                    <h3>Confidentiality</h3>
+                    <p>Your data will be kept strictly confidential. All data will be:</p>
+                    <ul>
+                        <li>Stored securely on encrypted servers</li>
+                        <li>Identified only by a random participant code</li>
+                        <li>Reported only in aggregate form</li>
+                        <li>Retained for up to 7 years per university policy</li>
+                    </ul>
+
+                    <h3>Voluntary Participation</h3>
+                    <p>Your participation is entirely voluntary. You may:</p>
+                    <ul>
+                        <li>Decline to participate without penalty</li>
+                        <li>Stop at any time without penalty</li>
+                        <li>Skip any questions you prefer not to answer</li>
+                        <li>Withdraw your data after participation (within 48 hours)</li>
+                    </ul>
+
+                    <h3>Compensation</h3>
+                    <p>You will receive [course credit/payment] upon completion.</p>
+
+                    <h3>Contact Information</h3>
+                    <p>Questions about this study? Contact:</p>
+                    <ul>
+                        <li><strong>Principal Investigator:</strong> [Name, Email, Phone]</li>
+                        <li><strong>IRB Office:</strong> [IRB Contact Info]</li>
+                    </ul>
+
+                    <div class="consent-checkbox">
+                        <label>
+                            <input type="checkbox" id="consent-check">
+                            <span>I have read and understood the above information. I am 18 years or older and voluntarily agree to participate in this research study.</span>
+                        </label>
+                    </div>
+
+                    <div class="consent-buttons">
+                        <button class="btn btn-secondary" onclick="showWelcome()">Back</button>
+                        <button class="btn btn-primary" id="consent-btn" onclick="recordConsent()" disabled>I Consent</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Assignment Section -->
+            <section id="assignment-section" class="section">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Preparing your experiment...</p>
+                </div>
+            </section>
+
+            <!-- Redirect Information -->
+            <section id="redirect-section" class="section">
+                <h2>Ready to Begin!</h2>
+                <p>You will now be directed to your assigned task.</p>
+                <p class="redirect-info">If you are not automatically redirected in 3 seconds, click the button below:</p>
+                <button class="btn btn-primary" id="manual-redirect-btn">Start Experiment</button>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>Research Study - University Psychology Department</p>
+            <p class="small-text">IRB Approval #: [Number] | Valid through: [Date]</p>
+        </footer>
+    </div>
+
+    <script src="../assets/js/api-client.js"></script>
+    <script>
+        // ====================================================================
+        // PAGE NAVIGATION
+        // ====================================================================
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        function showWelcome() {
+            showSection('welcome-section');
+        }
+
+        function showConsent() {
+            showSection('consent-section');
+        }
+
+        // ====================================================================
+        // CONSENT HANDLING
+        // ====================================================================
+
+        // Enable consent button when checkbox is checked
+        document.getElementById('consent-check').addEventListener('change', function() {
+            document.getElementById('consent-btn').disabled = !this.checked;
+        });
+
+        async function recordConsent() {
+            try {
+                // Show loading
+                showSection('assignment-section');
+
+                // Random assignment to experiment
+                const experiments = ['treasure_hunt', 'career_choice', 'pattern_memory'];
+                const randomExperiment = experiments[Math.floor(Math.random() * experiments.length)];
+
+                // Record consent and get assignment
+                const response = await api.recordConsent({
+                    experiment_type: randomExperiment,
+                    consent_given: true,
+                    user_agent: navigator.userAgent,
+                    ip_address: null  // Server will capture from request
+                });
+
+                // Store participant info
+                sessionStorage.setItem('participant_id', response.participant_id);
+                sessionStorage.setItem('experiment_type', response.experiment_type);
+                sessionStorage.setItem('condition', response.condition);
+
+                // Show redirect section
+                showSection('redirect-section');
+
+                // Determine redirect URL
+                const experimentPages = {
+                    'treasure_hunt': 'experiment1.html',
+                    'career_choice': 'experiment2.html',
+                    'pattern_memory': 'experiment3.html'
+                };
+
+                const redirectUrl = experimentPages[response.experiment_type];
+
+                // Set up manual redirect button
+                document.getElementById('manual-redirect-btn').onclick = function() {
+                    window.location.href = redirectUrl;
+                };
+
+                // Auto-redirect after 3 seconds
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 3000);
+
+            } catch (error) {
+                console.error('Error recording consent:', error);
+                alert('There was an error starting the experiment. Please refresh the page and try again.');
+                showWelcome();
+            }
+        }
+
+        // ====================================================================
+        // INITIALIZATION
+        // ====================================================================
+
+        // Check if already participated
+        window.addEventListener('DOMContentLoaded', function() {
+            const completionCode = sessionStorage.getItem('completion_code');
+            if (completionCode) {
+                if (confirm('You have already completed this study. Your completion code is: ' + completionCode + '\n\nDo you want to participate again?')) {
+                    sessionStorage.clear();
+                } else {
+                    window.location.href = 'debrief.html';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

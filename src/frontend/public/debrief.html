@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Complete - Thank You!</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Study Complete!</h1>
+            <p class="subtitle">Thank You for Participating</p>
+        </header>
+
+        <main class="main-content">
+            <div class="success-box">
+                <h2>✓ Your Data Has Been Saved</h2>
+                <p>Thank you for completing this research study!</p>
+            </div>
+
+            <div id="completion-code-section" class="info-box" style="margin: 30px 0;">
+                <h3>Your Completion Code:</h3>
+                <p style="font-size: 24px; font-family: monospace; font-weight: bold; color: #2c3e50;" id="code-display">
+                    Loading...
+                </p>
+                <p style="font-size: 14px; color: #7f8c8d;">
+                    Please save this code for your records. You may need it to claim your compensation.
+                </p>
+                <button class="btn btn-secondary" onclick="copyCode()">Copy Code</button>
+            </div>
+
+            <div style="margin-top: 40px;">
+                <h2>About This Study</h2>
+
+                <h3>What We Were Testing</h3>
+                <p>This study examined two competing theories about why people persist in their behavior even when outcomes change:</p>
+
+                <ol style="text-align: left; max-width: 600px; margin: 20px auto;">
+                    <li><strong>Festinger's Cognitive Dissonance Theory (1957):</strong>
+                        People who work harder for a reward value it more highly, leading to greater persistence even after the reward stops.</li>
+
+                    <li><strong>Capaldi's Sequential Theory (1967):</strong>
+                        People who experience patterns (like alternating reward and no-reward) develop stronger expectations, leading to greater persistence.</li>
+                </ol>
+
+                <h3>Important Information</h3>
+                <p><strong>Mild Deception:</strong> If you participated in the Treasure Hunt game, you should know that in the final phase, ALL chests were actually empty. We wanted to see how long participants would continue trying when rewards stopped. This temporary deception was necessary to test our research questions about persistence.</p>
+
+                <h3>Why This Research Matters</h3>
+                <p>Understanding what makes people persist (or give up) has important applications in:</p>
+                <ul style="text-align: left; max-width: 600px; margin: 20px auto;">
+                    <li>Education (helping students persist through challenges)</li>
+                    <li>Workplace motivation</li>
+                    <li>Health behaviors (exercise, diet adherence)</li>
+                    <li>Clinical psychology (treating depression and anxiety)</li>
+                </ul>
+
+                <h3>Your Rights</h3>
+                <p>You have the right to:</p>
+                <ul style="text-align: left; max-width: 600px; margin: 20px auto;">
+                    <li>Withdraw your data within 48 hours (contact information below)</li>
+                    <li>Ask questions about the research</li>
+                    <li>Request a summary of the research findings (available after data collection)</li>
+                </ul>
+
+                <div class="info-box" style="margin: 30px 0;">
+                    <h3>Contact Information</h3>
+                    <p><strong>Principal Investigator:</strong> [Name]<br>
+                    Email: [email@university.edu]<br>
+                    Phone: [(XXX) XXX-XXXX]</p>
+
+                    <p><strong>IRB Office:</strong><br>
+                    Email: [irb@university.edu]<br>
+                    Phone: [(XXX) XXX-XXXX]</p>
+
+                    <p style="font-size: 14px; color: #7f8c8d; margin-top: 15px;">
+                        IRB Approval #: [Number] | Valid through: [Date]
+                    </p>
+                </div>
+
+                <h3>Want to Learn More?</h3>
+                <p>If you're interested in the theories we're testing, here are the original papers:</p>
+                <ul style="text-align: left; max-width: 600px; margin: 20px auto; font-size: 14px;">
+                    <li>Festinger, L. (1957). A Theory of Cognitive Dissonance. Stanford University Press.</li>
+                    <li>Capaldi, E. J. (1967). A sequential hypothesis of instrumental learning. In K. W. Spence & J. T. Spence (Eds.), The psychology of learning and motivation (Vol. 1, pp. 67-156).</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 50px; padding-top: 30px; border-top: 2px solid #ecf0f1;">
+                <p style="font-size: 18px; color: #27ae60; font-weight: bold;">
+                    Thank you for contributing to science!
+                </p>
+                <p style="color: #7f8c8d;">
+                    You may now close this window.
+                </p>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Research Study - University Psychology Department</p>
+        </footer>
+    </div>
+
+    <script>
+        // Display completion code
+        window.addEventListener('DOMContentLoaded', function() {
+            const completionCode = sessionStorage.getItem('completion_code');
+            const codeDisplay = document.getElementById('code-display');
+
+            if (completionCode) {
+                codeDisplay.textContent = completionCode;
+            } else {
+                codeDisplay.textContent = 'No code found';
+                codeDisplay.style.color = '#e74c3c';
+            }
+        });
+
+        // Copy code to clipboard
+        function copyCode() {
+            const code = document.getElementById('code-display').textContent;
+            navigator.clipboard.writeText(code).then(function() {
+                alert('Completion code copied to clipboard!');
+            }, function() {
+                alert('Failed to copy code. Please copy it manually.');
+            });
+        }
+    </script>
+</body>
+</html>
