@@ -14,6 +14,7 @@
 
     <!-- jsPsych plugins -->
     <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.3/dist/index.browser.min.js?v=2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-slider-response@1.1.2/dist/index.browser.min.js?v=2"></script>
     <script src="https://unpkg.com/@jspsych/plugin-survey@0.2.1/dist/index.browser.min.js?v=2"></script>
     <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3/dist/index.browser.min.js?v=2"></script>
 
@@ -61,6 +62,76 @@
         .card-blank {
             color: #95a5a6;
             font-size: 100px;
+        }
+
+        /* Radio button styling for likert scales */
+        input[type="radio"] {
+            appearance: auto !important;
+            -webkit-appearance: radio !important;
+            -moz-appearance: radio !important;
+            width: 15px !important;
+            height: 15px !important;
+            cursor: pointer !important;
+            margin: 15px !important;
+            display: inline-block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            position: relative !important;
+            z-index: 1000 !important;
+            border: 3px solid #333 !important;
+            background: white !important;
+            transform: scale(1.5) !important;
+        }
+
+        /* Override jsPsych survey plugin's visuallyhidden class */
+        .sv_main .sv-visuallyhidden,
+        .sv-visuallyhidden,
+        .sv_main input[type="radio"].sv-visuallyhidden,
+        input[type="radio"].sv-visuallyhidden {
+            position: relative !important;
+            height: 15px !important;
+            width: 15px !important;
+            overflow: visible !important;
+            clip: auto !important;
+            transform: scale(1.5) !important;
+        }
+
+        /* Likert scale container styling */
+        .jspsych-survey-likert {
+            margin: 20px 0;
+        }
+
+        .jspsych-survey-likert-opts {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            padding: 0 20px;
+        }
+
+        .jspsych-survey-likert-opts label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 20px;
+            min-width: 80px;
+        }
+
+        .jspsych-survey-likert-opts label:hover {
+            background-color: #e8f4f8;
+            border-radius: 12px;
+        }
+
+        .jspsych-survey-likert-opts input[type="radio"] {
+            margin-bottom: 15px;
+        }
+
+        .jspsych-survey-likert-opts .likert-label {
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.4;
         }
     </style>
 </head>

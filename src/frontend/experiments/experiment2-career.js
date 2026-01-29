@@ -171,42 +171,74 @@ function runCareerChoice(participantId) {
             choices: ['Continue to Questions']
         });
 
-        // Primary DV questions using Survey plugin
+        // Primary DV questions - Tenure slider
+        timeline.push({
+            type: jsPsychHtmlSliderResponse,
+            stimulus: `
+                <h3>${scenario.name} - Your Decisions</h3>
+                <p style="font-size: 16px; margin: 20px 0;">
+                    <strong>If payment issues continue, how many MORE months would you stay at ${scenario.name}?</strong>
+                </p>
+                <div id="slider-tenure-value" style="font-size: 24px; font-weight: bold; color: #3498db; margin-top: 20px;">
+                    12 months
+                </div>
+            `,
+            labels: ['0 months<br>(Leave immediately)', '12 months', '24 months<br>(Stay 2 more years)'],
+            min: 0,
+            max: 24,
+            slider_start: 12,
+            step: 1,
+            require_movement: true,
+            slider_width: 600,
+            on_load: function() {
+                const slider = document.querySelector('input[type="range"]');
+                const valueDisplay = document.querySelector('#slider-tenure-value');
+                slider.addEventListener('input', function() {
+                    const val = this.value;
+                    valueDisplay.textContent = val + (val == 1 ? ' month' : ' months');
+                });
+            },
+            on_finish: function(data) {
+                responses.tenure[scenario.id] = data.response;
+            }
+        });
+
+        // Value slider
+        timeline.push({
+            type: jsPsychHtmlSliderResponse,
+            stimulus: `
+                <h3>${scenario.name} - Your Decisions</h3>
+                <p style="font-size: 16px; margin: 20px 0;">
+                    <strong>How much do you value working at ${scenario.name}?</strong>
+                </p>
+                <div id="slider-value-display" style="font-size: 24px; font-weight: bold; color: #3498db; margin-top: 20px;">
+                    Value: 50
+                </div>
+            `,
+            labels: ['0<br>Not at all valuable', '50<br>Moderately valuable', '100<br>Extremely valuable'],
+            min: 0,
+            max: 100,
+            slider_start: 50,
+            step: 1,
+            require_movement: true,
+            slider_width: 600,
+            on_load: function() {
+                const slider = document.querySelector('input[type="range"]');
+                const valueDisplay = document.querySelector('#slider-value-display');
+                slider.addEventListener('input', function() {
+                    const val = this.value;
+                    valueDisplay.textContent = 'Value: ' + val;
+                });
+            },
+            on_finish: function(data) {
+                responses.value[scenario.id] = data.response;
+            }
+        });
+
+        // Manipulation checks
         timeline.push({
             type: jsPsychSurvey,
             pages: [[
-                {
-                    type: 'html',
-                    prompt: `<h3>${scenario.name} - Your Decisions</h3>`
-                },
-                {
-                    type: 'html-slider-response',
-                    prompt: `<p style="font-size: 16px; margin: 20px 0;">
-                        <strong>If payment issues continue, how many MORE months would you stay at ${scenario.name}?</strong>
-                    </p>`,
-                    name: `tenure_${scenario.id}`,
-                    required: true,
-                    min: 0,
-                    max: 24,
-                    start: 12,
-                    step: 1,
-                    labels: ['0 months<br>(Leave immediately)', '12 months', '24 months<br>(Stay 2 more years)'],
-                    slider_width: 600
-                },
-                {
-                    type: 'html-slider-response',
-                    prompt: `<p style="font-size: 16px; margin: 20px 0;">
-                        <strong>How much do you value working at ${scenario.name}?</strong>
-                    </p>`,
-                    name: `value_${scenario.id}`,
-                    required: true,
-                    min: 0,
-                    max: 100,
-                    start: 50,
-                    step: 1,
-                    labels: ['0<br>Not at all valuable', '50<br>Moderately valuable', '100<br>Extremely valuable'],
-                    slider_width: 600
-                },
                 {
                     type: 'likert',
                     prompt: `How predictable were ${scenario.name}'s payments?`,
@@ -240,8 +272,6 @@ function runCareerChoice(participantId) {
             ]],
             on_finish: function(data) {
                 const response = data.response;
-                responses.tenure[scenario.id] = response[`tenure_${scenario.id}`];
-                responses.value[scenario.id] = response[`value_${scenario.id}`];
                 responses.manipulation_checks[scenario.id] = {
                     predictability: response[`predictability_${scenario.id}`],
                     effort: response[`effort_${scenario.id}`]
@@ -326,20 +356,32 @@ function runCareerChoice(participantId) {
                 pages: [[
                     {
                         type: 'text',
-                        prompt: 'Enter the digits you saw in order (no spaces):',
+                        prompt: '<p style="font-size: 18px; margin-bottom: 20px;">Enter the digits you saw in order (no spaces):</p>',
                         name: 'digit_recall',
-                        required: true,
-                        textbox_columns: 20
+                        required: false,
+                        textbox_columns: 30,
+                        placeholder: 'e.g., 12345'
                     }
                 ]],
+                button_label_finish: 'Submit',
+                validation: function(data) {
+                    // Custom validation - allow empty or any input
+                    return undefined;
+                },
                 on_finish: function(data) {
                     const correctDigits = jsPsych.data.get().last(2).values()[0].current_digits;
-                    const userResponse = data.response.digit_recall.trim();
-                    const correct = userResponse === correctDigits;
+                    const userResponse = data.response.digit_recall ? String(data.response.digit_recall).trim() : '';
+
+                    console.log('User entered:', userResponse);
+                    console.log('Correct answer:', correctDigits);
+
+                    // If empty, count as incorrect
+                    const correct = userResponse.length > 0 && userResponse === correctDigits;
 
                     data.correct = correct;
                     data.span_length = currentSpan;
                     data.correct_answer = correctDigits;
+                    data.user_response = userResponse;
 
                     if (correct) {
                         consecutiveCorrect++;

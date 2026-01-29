@@ -63,14 +63,18 @@ function runTreasureHunt(participantId, condition) {
     // ========================================================================
 
     class ChestClickPlugin {
+        constructor(jsPsych) {
+            this.jsPsych = jsPsych;
+        }
+
         static info = {
             name: 'chest-click',
             parameters: {
-                clicks_required: { type: 'int', default: 3 },
-                outcome: { type: 'int', default: 0 },
-                show_quit_button: { type: 'bool', default: false },
-                trial_number: { type: 'int', default: 1 },
-                total_coins: { type: 'int', default: 0 }
+                clicks_required: { type: 'INT', default: 3 },
+                outcome: { type: 'INT', default: 0 },
+                show_quit_button: { type: 'BOOL', default: false },
+                trial_number: { type: 'INT', default: 1 },
+                total_coins: { type: 'INT', default: 0 }
             }
         }
 
@@ -131,7 +135,7 @@ function runTreasureHunt(participantId, condition) {
 
             const endTrial = () => {
                 const rt = performance.now() - startTime;
-                jsPsych.finishTrial({
+                this.jsPsych.finishTrial({
                     clicks: clickCount,
                     clicks_required: trial.clicks_required,
                     outcome: trial.outcome,
@@ -152,8 +156,6 @@ function runTreasureHunt(participantId, condition) {
             }
         }
     }
-
-    // Plugin will be used directly via type reference, no need to register in v7
 
     // ========================================================================
     // TIMELINE
@@ -196,7 +198,7 @@ function runTreasureHunt(participantId, condition) {
     const practiceOutcomes = [1, 0, 1, 1, 0];
     for (let i = 0; i < CONFIG.n_practice; i++) {
         timeline.push({
-            type: 'chest-click',
+            type: ChestClickPlugin,
             clicks_required: CONFIG.clicks_baseline,
             outcome: practiceOutcomes[i],
             show_quit_button: false,
@@ -232,7 +234,7 @@ function runTreasureHunt(participantId, condition) {
         const clicks = getClicksRequired(condition, outcome);
 
         timeline.push({
-            type: 'chest-click',
+            type: ChestClickPlugin,
             clicks_required: clicks,
             outcome: outcome,
             show_quit_button: false,
@@ -267,7 +269,7 @@ function runTreasureHunt(participantId, condition) {
     // Extinction phase (conditional loop)
     const extinctionLoop = {
         timeline: [{
-            type: 'chest-click',
+            type: ChestClickPlugin,
             clicks_required: CONFIG.clicks_baseline,
             outcome: 0,  // All empty
             show_quit_button: true,
