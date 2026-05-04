@@ -370,9 +370,13 @@ app.get('/experiment1', (req, res) => {
     res.sendFile(path.join(__dirname, '../experiment1_jspsych/index.html'));
 });
 
-// Experiment 2 (Career Choice) is intended for Qualtrics — see career_survey.py.
-// Experiment 3 (Pattern Memory) currently only has the PsychoPy implementation.
-// Web ports of these are not yet built; their routes are intentionally absent.
+app.get('/experiment2', (req, res) => {
+    res.sendFile(path.join(__dirname, '../experiment2_jspsych/index.html'));
+});
+
+app.get('/experiment3', (req, res) => {
+    res.sendFile(path.join(__dirname, '../experiment3_jspsych/index.html'));
+});
 
 // Landing page
 app.get('/', (req, res) => {
@@ -426,14 +430,14 @@ app.get('/', (req, res) => {
             <div class="experiment-card">
                 <h2>Experiment 2: Career Choice Study</h2>
                 <p>Compare job offers with different recognition programs. (12 minutes)</p>
-                <p style="color: #7f8c8d;"><em>Web version not yet built — deploy via Qualtrics. See <code>experiments/experiment2_career_choice/career_survey.py</code>.</em></p>
+                <a href="/experiment2" class="button">Start Experiment</a>
                 <a href="/api/stats/career_choice" class="button admin">View Stats</a>
             </div>
 
             <div class="experiment-card">
                 <h2>Experiment 3: Pattern Memory Challenge</h2>
                 <p>Watch cards and test your expectations. (10 minutes)</p>
-                <p style="color: #7f8c8d;"><em>Web version not yet built — run the PsychoPy script in <code>experiments/experiment3_pattern_memory/</code>.</em></p>
+                <a href="/experiment3" class="button">Start Experiment</a>
                 <a href="/api/stats/pattern_memory" class="button admin">View Stats</a>
             </div>
 
