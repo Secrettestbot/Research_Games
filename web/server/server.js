@@ -190,6 +190,11 @@ app.get('/api/assign/:experiment', (req, res) => {
  * POST /api/save
  * Save participant data
  */
+/** Allow only safe characters in participant IDs used as filenames. */
+function sanitizeParticipantId(id) {
+    return String(id).replace(/[^A-Za-z0-9_-]/g, '_');
+}
+
 app.post('/api/save', (req, res) => {
     const data = req.body;
 
@@ -219,13 +224,17 @@ app.post('/api/save', (req, res) => {
         fs.mkdirSync(expDir, { recursive: true });
     }
 
-    // Generate filename
-    const filename = `${data.participant_id}_${Date.now()}.json`;
+    // One file per participant. Each save (including incremental phase
+    // snapshots) overwrites the same file via tmp + rename, so partial saves
+    // never leave a corrupt JSON behind.
+    const safeId = sanitizeParticipantId(data.participant_id);
+    const filename = `${safeId}.json`;
     const filepath = path.join(expDir, filename);
+    const tmpPath = `${filepath}.tmp`;
 
-    // Save data
     try {
-        fs.writeFileSync(filepath, JSON.stringify(data, null, 2));
+        fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2));
+        fs.renameSync(tmpPath, filepath);
         console.log(`Saved data: ${filepath}`);
 
         res.json({
