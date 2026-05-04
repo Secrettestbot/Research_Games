@@ -176,10 +176,11 @@ Date: January 2025
         // ====================================================================
 
         let expData = {
-            participant_id: `P${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+            participant_id: `P${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
             condition: null,
             start_time: new Date().toISOString(),
             total_coins: 0,
+            practice_coins: 0,
             practice_trials: [],
             acquisition_trials: [],
             extinction_trials: []
@@ -193,6 +194,9 @@ Date: January 2025
             type: jsPsychHtmlButtonResponse,
             stimulus: function() {
                 const trial = jsPsych.timelineVariable('trial_data');
+                const displayCoins = trial.phase === 'practice'
+                    ? expData.practice_coins
+                    : expData.total_coins;
                 return `
                     <div style="text-align: center;">
                         <div style="margin-bottom: 20px;">
@@ -200,7 +204,7 @@ Date: January 2025
                                 ${trial.phase === 'extinction' ? 'Extended Hunt' : `Trial ${trial.num}`}
                             </span>
                             <span style="font-size: 24px; color: #f1c40f; margin-left: 40px;">
-                                🪙 ${expData.total_coins} coins
+                                🪙 ${displayCoins} coins
                             </span>
                         </div>
 
@@ -245,9 +249,13 @@ Date: January 2025
                     if (clicks >= trial.clicks_required) {
                         completed = true;
 
-                        // Update coins
-                        if (trial.outcome === 1) {
+                        // Update coins (acquisition only — practice has its own counter,
+                        // extinction is always empty)
+                        if (trial.outcome === 1 && trial.phase === 'acquisition') {
                             expData.total_coins += CONFIG.coins_per_chest;
+                        }
+                        if (trial.outcome === 1 && trial.phase === 'practice') {
+                            expData.practice_coins += CONFIG.coins_per_chest;
                         }
 
                         // Show outcome
@@ -268,9 +276,11 @@ Date: January 2025
                         else if (trial.phase === 'acquisition') expData.acquisition_trials.push(data);
                         else expData.extinction_trials.push(data);
 
-                        // Auto-advance after delay
+                        // Auto-advance after the outcome display.
+                        // Do NOT click the on-screen button: in extinction the only
+                        // button is the QUIT button, and clicking it would falsely
+                        // record the trial as a quit and end the timeline.
                         setTimeout(() => {
-                            document.querySelector('.jspsych-btn')?.click() ||
                             jsPsych.finishTrial();
                         }, CONFIG.outcome_display_time);
                     }

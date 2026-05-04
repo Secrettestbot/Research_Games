@@ -60,31 +60,17 @@ This document contains the complete design specifications for three experiments:
 
 ## Directory Structure
 
+See the top-level `README.md` for the authoritative repo layout. At a glance:
+
 ```
-/experiments/
-  /experiment1_treasure_hunt/
-    - treasure_hunt.py          # Main PsychoPy experiment
-    - /conditions/              # CSV files for each condition
-    - /analysis/                # R analysis scripts
-    - /assets/                  # Images and sounds
+experiments/
+  experiment1_treasure_hunt/   # PsychoPy script + condition CSVs + R analysis
+  experiment2_career_choice/   # Qualtrics-bound Python config + R analysis
+  experiment3_pattern_memory/  # PsychoPy script + condition CSVs + R analysis
 
-  /experiment2_career_choice/
-    - survey_implementation.js  # Qualtrics JavaScript
-    - survey_structure.qsf      # Qualtrics survey file
-    - /analysis/                # R analysis scripts
-
-  /experiment3_pattern_memory/
-    - pattern_memory.py         # Main PsychoPy experiment
-    - /conditions/              # CSV files
-    - /analysis/                # R analysis scripts
-    - /assets/                  # Card images
-
-/docs/
-  - experiment_design_reference.md
-
-/shared/
-  - common_analysis_functions.R
-  - power_analysis.R
+docs/                          # Design references (this file)
+shared/                        # Cross-experiment R analysis helpers
+web/                           # jsPsych port of Experiment 1 + Express server
 ```
 
 ---

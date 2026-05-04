@@ -52,8 +52,7 @@ Pavlovia (pavlovia.org) is a hosting service for PsychoPy experiments. It automa
 ```
 web/
 ├── experiment1_jspsych/
-│   ├── index.html          # Experiment 1 web page
-│   └── treasure_hunt.js    # Full jsPsych implementation
+│   └── index.html          # Experiment 1 (jsPsych, self-contained)
 ├── server/
 │   ├── server.js           # Express.js backend
 │   └── package.json        # Dependencies
@@ -258,22 +257,7 @@ A: Test touch events; adjust button sizes; consider orientation lock
 ```
 web/
 ├── experiment1_jspsych/
-│   ├── index.html
-│   ├── treasure_hunt.js
-│   └── assets/
-│       ├── chest.png
-│       └── coin.png
-│
-├── experiment2_web/
-│   ├── index.html
-│   └── career_survey.js
-│
-├── experiment3_web/
-│   ├── index.html
-│   ├── pattern_memory.js
-│   └── assets/
-│       ├── ace.png
-│       └── blank.png
+│   └── index.html      # Currently the only web-deployed experiment
 │
 ├── server/
 │   ├── server.js
@@ -282,6 +266,9 @@ web/
 │
 └── WEB_INTEGRATION_GUIDE.md
 ```
+
+Experiments 2 and 3 do not have web ports yet — see the Python implementations
+in `experiments/experiment2_career_choice/` and `experiments/experiment3_pattern_memory/`.
 
 ---
 

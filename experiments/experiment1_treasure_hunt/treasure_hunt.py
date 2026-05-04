@@ -954,10 +954,11 @@ def get_participant_info():
         order=['participant_id', 'age', 'gender', 'condition'],
     )
 
-    if dlg.OK:
-        return info
-    else:
-        core.quit()
+    if not dlg.OK:
+        core.quit()  # Raises SystemExit, but be explicit for readers.
+        return None
+
+    return info
 
 
 # =============================================================================

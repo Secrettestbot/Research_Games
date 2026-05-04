@@ -81,31 +81,34 @@ Research_Games/
 │   └── experiment_design_reference.md
 ├── experiments/
 │   ├── experiment1_treasure_hunt/
-│   │   ├── treasure_hunt.py          # Main PsychoPy experiment
-│   │   ├── conditions/               # CSV condition files
+│   │   ├── treasure_hunt.py          # PsychoPy implementation
+│   │   ├── conditions/               # Reference condition CSVs
 │   │   │   ├── baseline.csv
 │   │   │   ├── high_effort.csv
 │   │   │   ├── nr_pattern.csv
 │   │   │   └── rn_pattern.csv
-│   │   ├── analysis/
-│   │   │   └── analysis.R            # R analysis script
-│   │   └── assets/                   # Images, sounds
-│   │
-│   ├── experiment2_career_choice/
-│   │   ├── career_survey.py          # Survey implementation
 │   │   └── analysis/
 │   │       └── analysis.R
-│   │
+│   ├── experiment2_career_choice/
+│   │   ├── career_survey.py          # Qualtrics survey config
+│   │   └── analysis/
+│   │       └── analysis.R
 │   └── experiment3_pattern_memory/
-│       ├── pattern_memory.py         # Main PsychoPy experiment
+│       ├── pattern_memory.py         # PsychoPy implementation
 │       ├── conditions/
 │       │   ├── nr_pattern.csv
 │       │   └── random.csv
 │       └── analysis/
 │           └── analysis.R
-│
-└── shared/
-    └── common_analysis_functions.R   # Shared R functions
+├── shared/
+│   └── common_analysis_functions.R   # Shared R functions
+└── web/
+    ├── experiment1_jspsych/
+    │   └── index.html                # jsPsych port of Experiment 1
+    ├── server/
+    │   ├── server.js                 # Express data-collection backend
+    │   └── package.json
+    └── WEB_INTEGRATION_GUIDE.md
 ```
 
 ## Requirements

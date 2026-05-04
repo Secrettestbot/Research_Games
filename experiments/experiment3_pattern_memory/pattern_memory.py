@@ -209,36 +209,40 @@ class CardStimulus:
             color=CONFIG.colors['ace'],
         )
 
-    def draw_ace(self):
-        """Draw ACE card (red with heart)."""
+    def draw_ace(self, base_pos: Tuple[float, float] = (0, 0)):
+        """Draw ACE card (red with heart) centered on base_pos."""
+        bx, by = base_pos
+        self.card_bg.pos = base_pos
         self.card_bg.fillColor = '#ffffff'
         self.card_bg.lineColor = CONFIG.colors['ace']
         self.card_bg.draw()
 
         self.card_text.text = 'ACE'
         self.card_text.color = CONFIG.colors['ace']
-        self.card_text.pos = (0, 0.1)
+        self.card_text.pos = (bx, by + 0.1)
         self.card_text.draw()
 
+        self.heart.pos = (bx, by - 0.1)
         self.heart.draw()
 
-    def draw_blank(self):
-        """Draw BLANK card (gray)."""
+    def draw_blank(self, base_pos: Tuple[float, float] = (0, 0)):
+        """Draw BLANK card (gray) centered on base_pos."""
+        self.card_bg.pos = base_pos
         self.card_bg.fillColor = CONFIG.colors['blank']
         self.card_bg.lineColor = '#5d6d7e'
         self.card_bg.draw()
 
         self.card_text.text = 'BLANK'
         self.card_text.color = '#ffffff'
-        self.card_text.pos = (0, 0)
+        self.card_text.pos = base_pos
         self.card_text.draw()
 
-    def draw(self, card_type: str):
-        """Draw specified card type."""
+    def draw(self, card_type: str, base_pos: Tuple[float, float] = (0, 0)):
+        """Draw specified card type centered on base_pos."""
         if card_type == 'ACE':
-            self.draw_ace()
+            self.draw_ace(base_pos)
         elif card_type == 'BLANK':
-            self.draw_blank()
+            self.draw_blank(base_pos)
         else:
             raise ValueError(f"Unknown card type: {card_type}")
 
@@ -641,10 +645,23 @@ class PatternMemoryExperiment:
         )
 
         # Slider for expectation rating
-        self.slider = visual.Slider(
+        self.slider = self._make_slider(
+            labels=['Definitely\nBLANK', '', '', 'Either', '', '', 'Definitely\nACE'],
+        )
+
+        # Mouse
+        self.mouse = event.Mouse(win=self.win)
+
+    def _make_slider(self, labels):
+        """Build a 1–7 rating slider with the given labels.
+
+        PsychoPy's Slider builds label TextStims at construction, so we create
+        a new slider per question type rather than mutating .labels in place.
+        """
+        return visual.Slider(
             self.win,
             ticks=[1, 2, 3, 4, 5, 6, 7],
-            labels=['Definitely\nBLANK', '', '', 'Either', '', '', 'Definitely\nACE'],
+            labels=labels,
             pos=(0, -0.15),
             size=(0.6, 0.05),
             style='rating',
@@ -653,9 +670,6 @@ class PatternMemoryExperiment:
             fillColor=CONFIG.colors['blue'],
             borderColor=CONFIG.colors['text'],
         )
-
-        # Mouse
-        self.mouse = event.Mouse(win=self.win)
 
     def show_instructions(self, title: str, text: str, wait_time: float = 2.0):
         """Display instruction screen."""
@@ -1003,28 +1017,20 @@ What do you think comes NEXT?""",
         # Show BLANK card and get rating
         self.slider.reset()
 
+        # Build the question stim once outside the draw loop
+        question = visual.TextStim(
+            self.win,
+            text='The next card is most likely to be:',
+            height=0.035,
+            pos=(0, -0.05),
+            color=CONFIG.colors['text'],
+        )
+
         while self.slider.getRating() is None:
-            # Draw BLANK card (scaled down, positioned up)
-            self.card.card_bg.pos = (0, 0.15)
-            self.card.card_text.pos = (0, 0.15)
-            self.card.draw('BLANK')
-            self.card.card_bg.pos = (0, 0)  # Reset
-            self.card.card_text.pos = (0, 0)
-
-            # Question
-            question = visual.TextStim(
-                self.win,
-                text='The next card is most likely to be:',
-                height=0.035,
-                pos=(0, -0.05),
-                color=CONFIG.colors['text'],
-            )
+            # Draw BLANK card positioned upward to make room for slider
+            self.card.draw('BLANK', base_pos=(0, 0.2))
             question.draw()
-
-            # Slider
             self.slider.draw()
-
-            # Continue button (only if rating made)
             self.win.flip()
 
             if event.getKeys(['escape']):
@@ -1135,9 +1141,14 @@ Try to maximize your points!""",
 
         responses = {}
 
+        # Build a Likert slider once with agreement labels (fresh slider so
+        # labels actually render — see _make_slider).
+        likert_slider = self._make_slider(
+            labels=['Strongly\nDisagree', '', '', 'Neutral', '', '', 'Strongly\nAgree'],
+        )
+
         for q_id, q_text in questions:
-            self.slider.reset()
-            self.slider.labels = ['Strongly\nDisagree', '', '', 'Neutral', '', '', 'Strongly\nAgree']
+            likert_slider.reset()
 
             question_stim = visual.TextStim(
                 self.win,
@@ -1148,15 +1159,15 @@ Try to maximize your points!""",
                 wrapWidth=0.8,
             )
 
-            while self.slider.getRating() is None:
+            while likert_slider.getRating() is None:
                 question_stim.draw()
-                self.slider.draw()
+                likert_slider.draw()
                 self.win.flip()
 
                 if event.getKeys(['escape']):
                     self.quit_experiment()
 
-            responses[q_id] = self.slider.getRating()
+            responses[q_id] = likert_slider.getRating()
             core.wait(0.3)
 
         self.data['mechanism'] = responses
@@ -1477,10 +1488,11 @@ def get_participant_info() -> Dict:
         order=['participant_id', 'age', 'gender', 'condition'],
     )
 
-    if dlg.OK:
-        return info
-    else:
-        core.quit()
+    if not dlg.OK:
+        core.quit()  # Raises SystemExit, but be explicit for readers.
+        return None
+
+    return info
 
 
 # =============================================================================
