@@ -1,0 +1,14 @@
+# Node
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+
+# Collected experiment data (per-deployment, not versioned)
+web/server/data/
+experiments/*/data/
+
+# OS / editor
+.DS_Store
+*.swp

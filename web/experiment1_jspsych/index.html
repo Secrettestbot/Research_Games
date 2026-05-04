@@ -122,6 +122,11 @@ Date: January 2025
 
     <!-- Experiment Code -->
     <script>
+        // jsPsych instance — assigned in DOMContentLoaded, referenced by
+        // trial definitions below. In v7 `timelineVariable` lives on the
+        // instance returned by initJsPsych(), not the global namespace.
+        let jsPsych;
+
         // ====================================================================
         // CONFIGURATION
         // ====================================================================
@@ -184,8 +189,26 @@ Date: January 2025
             practice_coins: 0,
             practice_trials: [],
             acquisition_trials: [],
-            extinction_trials: []
+            extinction_trials: [],
+            phase_timings: {}
         };
+
+        function startPhase(name) {
+            expData.phase_timings[name] = {
+                start: new Date().toISOString(),
+                start_perf: performance.now(),
+            };
+        }
+
+        function endPhase(name) {
+            const t = expData.phase_timings[name];
+            if (!t || t.end) return;
+            t.end = new Date().toISOString();
+            t.duration_ms = Math.round(performance.now() - t.start_perf);
+            // start_perf is a runtime monotonic clock value; not useful in the
+            // saved JSON. Drop it so the saved record only has wall-clock fields.
+            delete t.start_perf;
+        }
 
         /**
          * Fire-and-forget incremental save. Errors are logged to the console
@@ -255,23 +278,31 @@ Date: January 2025
             button_html: '<button class="jspsych-btn" style="background: #e74c3c; margin-top: 20px;">%choice%</button>',
             on_load: function() {
                 const trial = jsPsych.timelineVariable('trial_data');
-                let clicks = 0;
-                let completed = false;
+
+                // Hoisted onto the trial object so on_finish can read the
+                // click count even when the participant clicks QUIT before
+                // the chest is fully opened.
+                chestClickTrial._state = {
+                    clicks: 0,
+                    completed: false,
+                    started_at: performance.now(),
+                };
 
                 const container = document.getElementById('chest-container');
                 const progress = document.getElementById('progress');
                 const clickText = document.getElementById('click-count');
 
                 container.addEventListener('click', function() {
-                    if (completed) return;
+                    const state = chestClickTrial._state;
+                    if (state.completed) return;
 
-                    clicks++;
-                    const pct = (clicks / trial.clicks_required) * 100;
+                    state.clicks++;
+                    const pct = (state.clicks / trial.clicks_required) * 100;
                     progress.style.width = `${Math.min(pct, 100)}%`;
-                    clickText.textContent = `Clicks: ${clicks} / ${trial.clicks_required}`;
+                    clickText.textContent = `Clicks: ${state.clicks} / ${trial.clicks_required}`;
 
-                    if (clicks >= trial.clicks_required) {
-                        completed = true;
+                    if (state.clicks >= trial.clicks_required) {
+                        state.completed = true;
 
                         // Update coins (acquisition only — practice has its own counter,
                         // extinction is always empty)
@@ -289,11 +320,13 @@ Date: January 2025
 
                         // Record data
                         const data = {
-                            clicks: clicks,
+                            clicks: state.clicks,
+                            clicks_required: trial.clicks_required,
                             outcome: trial.outcome,
                             completed: true,
                             phase: trial.phase,
-                            quit: false
+                            quit: false,
+                            duration_ms: Math.round(performance.now() - state.started_at),
                         };
 
                         if (trial.phase === 'practice') expData.practice_trials.push(data);
@@ -313,10 +346,16 @@ Date: January 2025
             on_finish: function(data) {
                 const trial = jsPsych.timelineVariable('trial_data');
                 if (trial.phase === 'extinction' && data.response === 0) {
-                    // Quit button pressed
+                    // Quit button pressed — capture partial click count.
+                    const state = chestClickTrial._state || {clicks: 0, started_at: performance.now()};
                     expData.extinction_trials.push({
+                        clicks: state.clicks,
+                        clicks_required: trial.clicks_required,
+                        outcome: trial.outcome,
+                        completed: false,
                         quit: true,
-                        phase: 'extinction'
+                        phase: 'extinction',
+                        duration_ms: Math.round(performance.now() - state.started_at),
                     });
                     jsPsych.endCurrentTimeline();
                 }
@@ -354,7 +393,8 @@ Date: January 2025
             timeline.push({
                 type: jsPsychHtmlButtonResponse,
                 stimulus: '<h2>PRACTICE ROUND</h2><p>Let\'s practice opening 5 chests.</p>',
-                choices: ['Start Practice']
+                choices: ['Start Practice'],
+                on_finish: function() { startPhase('practice'); }
             });
 
             const practiceOutcomes = [1, 0, 1, 1, 0];
@@ -383,7 +423,11 @@ Date: January 2025
                     `;
                 },
                 choices: ['Start Treasure Hunt'],
-                on_load: function() { saveSnapshot('after_practice'); }
+                on_load: function() {
+                    endPhase('practice');
+                    saveSnapshot('after_practice');
+                },
+                on_finish: function() { startPhase('acquisition'); }
             });
 
             // Acquisition
@@ -415,7 +459,11 @@ Date: January 2025
                     `;
                 },
                 choices: ['Continue Hunting'],
-                on_load: function() { saveSnapshot('after_acquisition'); }
+                on_load: function() {
+                    endPhase('acquisition');
+                    saveSnapshot('after_acquisition');
+                },
+                on_finish: function() { startPhase('extinction'); }
             });
 
             // Extinction loop
@@ -456,7 +504,8 @@ Date: January 2025
                         <p>Thank you for contributing to science!</p>
                     `;
                 },
-                choices: ['Finish']
+                choices: ['Finish'],
+                on_load: function() { endPhase('extinction'); }
             });
 
             return timeline;
@@ -481,7 +530,7 @@ Date: January 2025
             expData.condition = condition;
 
             // Initialize jsPsych
-            const jsPsych = initJsPsych({
+            jsPsych = initJsPsych({
                 display_element: 'jspsych-target',
                 show_progress_bar: true,
                 on_finish: function() {
