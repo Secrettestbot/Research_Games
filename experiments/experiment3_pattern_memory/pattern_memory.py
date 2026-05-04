@@ -568,9 +568,14 @@ class PatternMemoryExperiment:
 
         # Initialize data storage
         self.data = {
+            'experiment': 'pattern_memory',
             'participant_id': participant_info['participant_id'],
             'condition': self.condition,
             'start_time': datetime.now().isoformat(),
+            'demographics': {
+                'age': participant_info.get('age', ''),
+                'gender': participant_info.get('gender', ''),
+            },
             'card_sequence': self.card_sequence,
             'encoding': {},
             'distractor': {},

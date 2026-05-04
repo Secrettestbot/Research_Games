@@ -308,13 +308,18 @@ app.get('/api/export/:experiment', (req, res) => {
     let csv = '';
 
     if (experiment === 'treasure_hunt') {
-        csv = csvRow(['participant_id', 'condition', 'total_coins', 'extinction_chests', 'start_time', 'end_time']);
+        csv = csvRow([
+            'participant_id', 'condition', 'total_coins',
+            'extinction_chests_opened', 'extinction_quit_pressed',
+            'start_time', 'end_time',
+        ]);
         data.forEach(d => {
             csv += csvRow([
                 d.participant_id,
                 d.condition,
                 d.total_coins,
-                d.extinction_count ?? d.extinction_chests_opened ?? 0,
+                d.extinction_chests_opened ?? 0,
+                d.extinction_quit_pressed ?? false,
                 d.start_time,
                 d.end_time,
             ]);

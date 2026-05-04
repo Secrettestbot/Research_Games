@@ -676,6 +676,36 @@ class CareerChoiceExperiment:
         """Record response to a mechanism question."""
         self.data['mechanism_responses'][question_id] = response
 
+    def record_comparative_response(self, question_id: str, response: any):
+        """Record response to a comparative question (ranking, forced_choice)."""
+        self.data['comparative_responses'][question_id] = response
+
+    def record_individual_difference(self, question_id: str, response: any):
+        """Record response to an individual-difference question (NFS, work_experience, etc.)."""
+        self.data['individual_differences'][question_id] = response
+
+    def record_demographic(self, question_id: str, response: any):
+        """Record a demographic response (age, gender, major)."""
+        self.data['demographics'][question_id] = response
+
+    def record_working_memory(self, score: int, max_score: int,
+                              sequence: Optional[List[int]] = None,
+                              response: Optional[str] = None):
+        """Record digit-span working memory result.
+
+        Args:
+            score: Number of correct digits in correct positions.
+            max_score: Length of the displayed sequence.
+            sequence: The digits actually shown (optional, for replay/debug).
+            response: Raw participant response string (optional).
+        """
+        self.data['working_memory'] = {
+            'score': score,
+            'max_score': max_score,
+            'sequence': sequence,
+            'response': response,
+        }
+
     def score_manipulation_checks(self) -> Dict[str, bool]:
         """
         Score manipulation check responses.

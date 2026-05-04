@@ -249,9 +249,14 @@ class TreasureHuntExperiment:
 
         # Initialize data storage
         self.data = {
+            'experiment': 'treasure_hunt',
             'participant_id': participant_info['participant_id'],
             'condition': self.condition,
             'start_time': datetime.now().isoformat(),
+            'demographics': {
+                'age': participant_info.get('age', ''),
+                'gender': participant_info.get('gender', ''),
+            },
             'practice_trials': [],
             'acquisition_trials': [],
             'extinction_trials': [],

@@ -176,7 +176,8 @@ Date: January 2025
         // ====================================================================
 
         let expData = {
-            participant_id: `P${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+            experiment: 'treasure_hunt',
+            participant_id: `TR_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
             condition: null,
             start_time: new Date().toISOString(),
             total_coins: 0,
@@ -455,7 +456,13 @@ Date: January 2025
                 show_progress_bar: true,
                 on_finish: function() {
                     expData.end_time = new Date().toISOString();
-                    expData.extinction_count = expData.extinction_trials.filter(t => t.completed).length;
+                    // Match the schema the R analysis (and PsychoPy implementation) expects.
+                    expData.extinction_chests_opened =
+                        expData.extinction_trials.filter(t => t.completed).length;
+                    expData.extinction_quit_pressed =
+                        expData.extinction_trials.some(t => t.quit);
+                    expData.extinction_completed_all =
+                        expData.extinction_chests_opened >= CONFIG.n_extinction_max;
 
                     // Save data
                     fetch('/api/save', {
